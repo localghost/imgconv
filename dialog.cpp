@@ -3,6 +3,7 @@
 
 #include <QStandardPaths>
 #include <QFileDialog>
+#include <QMessageBox>
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
@@ -19,16 +20,12 @@ Dialog::~Dialog()
 
 std::size_t Dialog::get_width() const
 {
-    bool ok = true;
-    auto result = ui->editWidth->text().toUInt(&ok);
-    return (ok ? size_t(result) : 0);
+   return ui->editWidth->value();
 }
 
 std::size_t Dialog::get_height() const
 {
-    bool ok = true;
-    auto result = ui->editHeight->text().toUInt(&ok);
-    return (ok ? size_t(result) : 0);
+   return ui->editHeight->value();
 }
 
 std::string Dialog::get_destination() const
@@ -44,7 +41,7 @@ void Dialog::on_pushButton_clicked()
 
 void Dialog::on_buttonBox_accepted()
 {
-    accept();
+   accept();
 }
 
 void Dialog::on_buttonBox_rejected()
@@ -52,8 +49,8 @@ void Dialog::on_buttonBox_rejected()
     reject();
 }
 
-void Dialog::on_checkBox_stateChanged(int arg1)
+void Dialog::on_checkBox_stateChanged(int state)
 {
-    ui->pushButton->setEnabled(!ui->checkBox->isChecked());
-    ui->destination->setEnabled(!ui->checkBox->isChecked());
+    ui->pushButton->setEnabled(state == Qt::CheckState::Unchecked);
+    ui->destination->setEnabled(state == Qt::CheckState::Unchecked);
 }

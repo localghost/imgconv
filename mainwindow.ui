@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Image Converter</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -35,8 +35,10 @@
    <addaction name="actionRemove"/>
    <addaction name="actionResize"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionResize">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Resize</string>
    </property>
@@ -50,6 +52,9 @@
    </property>
   </action>
   <action name="actionRemove">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Remove</string>
    </property>

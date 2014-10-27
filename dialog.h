@@ -31,7 +31,11 @@ private slots:
     void on_checkBox_stateChanged(int arg1);
 
 private:
+    bool validateInput();
+
     Ui::Dialog *ui;
+    std::size_t width_{0};
+    std::size_t height_{0};
 };
 
 #endif // DIALOG_H
