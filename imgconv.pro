@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = imgconv
 TEMPLATE = app
 
-win {
+win32 {
     INCLUDEPATH += "C:\Program Files\ImageMagick-6.8.9-Q16\include"
     LIBS += -L"C:\Program Files\ImageMagick-6.8.9-Q16\lib" -lCORE_RL_Magick++_ -lCORE_RL_magick_ -lCORE_RL_wand_
 }
