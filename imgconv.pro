@@ -27,11 +27,15 @@ macx {
 SOURCES += main.cpp\
         mainwindow.cpp \
     dialog.cpp \
-    imimage.cpp
+    image.cpp \
+    imagefilter.cpp \
+    resizefilter.cpp
 
 HEADERS  += mainwindow.h \
     dialog.h \
-    imimage.h
+    image.h \
+    imagefilter.h \
+    resizefilter.h
 
 FORMS    += mainwindow.ui \
     dialog.ui

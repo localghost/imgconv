@@ -20,6 +20,7 @@ public:
     std::size_t get_width() const;
     std::size_t get_height() const;
     std::string get_destination() const;
+    bool keep_aspect_ratio() const;
 
 private slots:
     void on_pushButton_clicked();
@@ -28,7 +29,7 @@ private slots:
 
     void on_buttonBox_rejected();
 
-    void on_checkBox_stateChanged(int arg1);
+    void on_checkOverwrite_stateChanged(int state);
 
 private:
     bool validateInput();

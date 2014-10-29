@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>322</width>
-    <height>181</height>
+    <height>208</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Resize</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -23,19 +23,10 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="2">
-      <widget class="QPushButton" name="pushButton">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>...</string>
+        <string>height</string>
        </property>
       </widget>
      </item>
@@ -59,24 +50,14 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
+     <item row="7" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
         <string>destination</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
-      <widget class="QLabel" name="destination">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="text">
-        <string>destination folder</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="2">
+     <item row="8" column="2">
       <spacer name="verticalSpacer">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -89,20 +70,62 @@
        </property>
       </spacer>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_2">
+     <item row="7" column="1">
+      <widget class="QLabel" name="destination">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="text">
-        <string>height</string>
+        <string>destination folder</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="0" colspan="4">
-      <widget class="QCheckBox" name="checkBox">
+     <item row="7" column="2">
+      <widget class="QPushButton" name="pushButton">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
-        <string>overwrite</string>
+        <string>...</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0" colspan="3">
+      <widget class="QCheckBox" name="checkKeepAspectRatio">
+       <property name="toolTip">
+        <string>Size of the output images won't be exactly as the provided width and height.</string>
+       </property>
+       <property name="text">
+        <string>keep aspect ratio</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0" colspan="3">
+      <widget class="QCheckBox" name="checkOverwrite">
+       <property name="toolTip">
+        <string>If checked input files will be overwritten (non-recoverably).</string>
+       </property>
+       <property name="text">
+        <string>overwrite source files</string>
        </property>
        <property name="checked">
         <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0" colspan="3">
+      <widget class="Line" name="line">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
@@ -123,7 +146,7 @@
  <tabstops>
   <tabstop>editWidth</tabstop>
   <tabstop>editHeight</tabstop>
-  <tabstop>checkBox</tabstop>
+  <tabstop>checkOverwrite</tabstop>
   <tabstop>pushButton</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>

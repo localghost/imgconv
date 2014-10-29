@@ -9,6 +9,8 @@ namespace Ui {
 class MainWindow;
 }
 
+class QMenu;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -24,9 +26,16 @@ private slots:
 
     void on_actionResize_triggered();
 
+    void on_listWidget_customContextMenuRequested(const QPoint &pos);
+
+    void on_listWidget_itemSelectionChanged();
+
 private:
+    void setupListContextMenu();
+
     Ui::MainWindow *ui;
     std::vector<QString> files;
+    QMenu* listContextMenu_;
 };
 
 #endif // MAINWINDOW_H

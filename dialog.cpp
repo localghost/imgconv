@@ -33,6 +33,11 @@ std::string Dialog::get_destination() const
     return ui->destination->text().toStdString();
 }
 
+bool Dialog::keep_aspect_ratio() const
+{
+   return ui->checkKeepAspectRatio->isChecked();
+}
+
 void Dialog::on_pushButton_clicked()
 {
     auto path = QFileDialog::getExistingDirectory(this, tr("Choose destination folder"));
@@ -49,8 +54,8 @@ void Dialog::on_buttonBox_rejected()
     reject();
 }
 
-void Dialog::on_checkBox_stateChanged(int state)
+void Dialog::on_checkOverwrite_stateChanged(int state)
 {
-    ui->pushButton->setEnabled(state == Qt::CheckState::Unchecked);
-    ui->destination->setEnabled(state == Qt::CheckState::Unchecked);
+   ui->pushButton->setEnabled(state == Qt::CheckState::Unchecked);
+   ui->destination->setEnabled(state == Qt::CheckState::Unchecked);
 }

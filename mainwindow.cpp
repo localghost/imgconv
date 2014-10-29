@@ -11,14 +11,19 @@
 #include <QFutureWatcher>
 #include <QtConcurrent>
 #include <QProgressDialog>
+#include <QMenu>
 #include "dialog.h"
-#include "imimage.h"
+#include "image.h"
+#include "imagefilter.h"
+#include "resizefilter.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    listContextMenu_(new QMenu(this))
 {
     ui->setupUi(this);
+    setupListContextMenu();
 }
 
 MainWindow::~MainWindow()
@@ -26,12 +31,16 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::setupListContextMenu()
+{
+   listContextMenu_->addAction(ui->actionRemove);
+}
+
 void MainWindow::on_actionAdd_triggered()
 {
     QStringList selected = QFileDialog::getOpenFileNames(this, tr("Add file"));
     std::copy(selected.begin(), selected.end(), std::back_inserter(files));
     ui->listWidget->addItems(selected);
-    ui->actionRemove->setEnabled(true);
     ui->actionResize->setEnabled(true);
 }
 
@@ -42,10 +51,7 @@ void MainWindow::on_actionRemove_triggered()
         files.erase(std::find(files.begin(), files.end(), i->text()));
     qDeleteAll(ui->listWidget->selectedItems());
     if (ui->listWidget->count() == 0)
-    {
-       ui->actionRemove->setEnabled(false);
        ui->actionResize->setEnabled(false);
-    }
 }
 
 void MainWindow::on_actionResize_triggered()
@@ -63,6 +69,7 @@ void MainWindow::on_actionResize_triggered()
                                  tr("Neither width nor height can be 0"));
             return;
         }
+        bool keep_aspect_ratio = dialog->keep_aspect_ratio();
         std::string dest = dialog->get_destination();
 
         auto progress = new QProgressDialog();
@@ -74,11 +81,12 @@ void MainWindow::on_actionResize_triggered()
         QObject::connect(&watcher, SIGNAL(progressRangeChanged(int,int)), progress, SLOT(setRange(int,int)));
         QObject::connect(&watcher, SIGNAL(progressValueChanged(int)), progress, SLOT(setValue(int)));
 
-        watcher.setFuture(QtConcurrent::map(files.begin(), files.end(), [width, height, dest](const QString& path){
+        std::unique_ptr<im::ImageFilter> filter{new im::ResizeFilter{width, height, keep_aspect_ratio}};
+        watcher.setFuture(QtConcurrent::map(files.begin(), files.end(), [&filter, &dest](const QString& path){
             QFileInfo src{path};
-            IMImage img;
+            im::Image img;
             img.read(src.filePath().toStdString());
-            img.resize(width, height);
+            img.apply_filter(filter.get());
             img.write((QString::fromStdString(dest) + QDir::separator() + src.fileName()).toStdString());
         }));
 
@@ -96,4 +104,14 @@ void MainWindow::on_actionResize_triggered()
                                  tr("Processing some of the images failed.\nPlease copy below line and send to zkostrzewa@gmail.com\n") + ex.what());
         }
     }
+}
+
+void MainWindow::on_listWidget_customContextMenuRequested(const QPoint& pos)
+{
+   listContextMenu_->exec(ui->listWidget->mapToGlobal(pos));
+}
+
+void MainWindow::on_listWidget_itemSelectionChanged()
+{
+    ui->actionRemove->setEnabled(!ui->listWidget->selectedItems().empty());
 }
