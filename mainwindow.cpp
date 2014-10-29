@@ -34,6 +34,7 @@ MainWindow::~MainWindow()
 void MainWindow::setupListContextMenu()
 {
    listContextMenu_->addAction(ui->actionRemove);
+   listContextMenu_->addAction(ui->actionRemove_All);
 }
 
 void MainWindow::on_actionAdd_triggered()
@@ -41,7 +42,11 @@ void MainWindow::on_actionAdd_triggered()
     QStringList selected = QFileDialog::getOpenFileNames(this, tr("Add file"));
     std::copy(selected.begin(), selected.end(), std::back_inserter(files));
     ui->listWidget->addItems(selected);
-    ui->actionResize->setEnabled(true);
+    if (!selected.empty())
+    {
+        ui->actionResize->setEnabled(true);
+        ui->actionRemove_All->setEnabled(true);
+    }
 }
 
 void MainWindow::on_actionRemove_triggered()
@@ -51,7 +56,10 @@ void MainWindow::on_actionRemove_triggered()
         files.erase(std::find(files.begin(), files.end(), i->text()));
     qDeleteAll(ui->listWidget->selectedItems());
     if (ui->listWidget->count() == 0)
+    {
        ui->actionResize->setEnabled(false);
+       ui->actionRemove_All->setEnabled(false);
+    }
 }
 
 void MainWindow::on_actionResize_triggered()
@@ -114,4 +122,13 @@ void MainWindow::on_listWidget_customContextMenuRequested(const QPoint& pos)
 void MainWindow::on_listWidget_itemSelectionChanged()
 {
     ui->actionRemove->setEnabled(!ui->listWidget->selectedItems().empty());
+}
+
+void MainWindow::on_actionRemove_All_triggered()
+{
+    ui->listWidget->clear();
+    files.clear();
+    ui->actionResize->setEnabled(false);
+    ui->actionRemove->setEnabled(false);
+    ui->actionRemove_All->setEnabled(false);
 }

@@ -30,6 +30,8 @@ private slots:
 
     void on_listWidget_itemSelectionChanged();
 
+    void on_actionRemove_All_triggered();
+
 private:
     void setupListContextMenu();
 

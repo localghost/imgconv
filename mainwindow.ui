@@ -36,6 +36,7 @@
    </attribute>
    <addaction name="actionAdd"/>
    <addaction name="actionRemove"/>
+   <addaction name="actionRemove_All"/>
    <addaction name="actionResize"/>
   </widget>
   <action name="actionResize">
@@ -60,6 +61,17 @@
    </property>
    <property name="text">
     <string>Remove</string>
+   </property>
+  </action>
+  <action name="actionRemove_All">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Remove All</string>
+   </property>
+   <property name="toolTip">
+    <string>Removes all elements from the list.</string>
    </property>
   </action>
  </widget>
