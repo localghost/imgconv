@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>322</width>
-    <height>208</height>
+    <height>246</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,31 +33,37 @@
      <item row="1" column="1">
       <widget class="QSpinBox" name="editHeight">
        <property name="minimum">
-        <number>1</number>
+        <number>0</number>
        </property>
        <property name="maximum">
         <number>9999</number>
+       </property>
+       <property name="value">
+        <number>0</number>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
       <widget class="QSpinBox" name="editWidth">
        <property name="minimum">
-        <number>1</number>
+        <number>0</number>
        </property>
        <property name="maximum">
         <number>9999</number>
        </property>
+       <property name="value">
+        <number>0</number>
+       </property>
       </widget>
      </item>
-     <item row="7" column="0">
+     <item row="8" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
         <string>destination</string>
        </property>
       </widget>
      </item>
-     <item row="8" column="2">
+     <item row="9" column="2">
       <spacer name="verticalSpacer">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -70,7 +76,7 @@
        </property>
       </spacer>
      </item>
-     <item row="7" column="1">
+     <item row="8" column="1">
       <widget class="QLabel" name="destination">
        <property name="enabled">
         <bool>true</bool>
@@ -80,7 +86,7 @@
        </property>
       </widget>
      </item>
-     <item row="7" column="2">
+     <item row="8" column="2">
       <widget class="QPushButton" name="pushButton">
        <property name="enabled">
         <bool>true</bool>
@@ -109,8 +115,11 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="0" colspan="3">
+     <item row="6" column="0" colspan="3">
       <widget class="QCheckBox" name="checkOverwrite">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="toolTip">
         <string>If checked input files will be overwritten (non-recoverably).</string>
        </property>
@@ -126,6 +135,32 @@
       <widget class="Line" name="line">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0" colspan="2">
+      <widget class="QCheckBox" name="checkConvert">
+       <property name="text">
+        <string>convert to jpg</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="2">
+      <widget class="QSpinBox" name="editQuality">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="toolTip">
+        <string>Image quality</string>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>10</number>
+       </property>
+       <property name="value">
+        <number>10</number>
        </property>
       </widget>
      </item>

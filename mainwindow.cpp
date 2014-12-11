@@ -79,6 +79,7 @@ void MainWindow::on_actionResize_triggered()
         }
         bool keep_aspect_ratio = dialog->keep_aspect_ratio();
         std::string dest = dialog->get_destination();
+        bool convert_to_jpg = dialog->convert();
 
         auto progress = new QProgressDialog();
         progress->setLabelText(tr("Processing images..."));
@@ -90,12 +91,14 @@ void MainWindow::on_actionResize_triggered()
         QObject::connect(&watcher, SIGNAL(progressValueChanged(int)), progress, SLOT(setValue(int)));
 
         std::unique_ptr<im::ImageFilter> filter{new im::ResizeFilter{width, height, keep_aspect_ratio}};
-        watcher.setFuture(QtConcurrent::map(files.begin(), files.end(), [&filter, &dest](const QString& path){
+        watcher.setFuture(QtConcurrent::map(files.begin(), files.end(), [&filter, &dest, convert_to_jpg](const QString& path){
             QFileInfo src{path};
             im::Image img;
             img.read(src.filePath().toStdString());
             img.apply_filter(filter.get());
-            img.write((QString::fromStdString(dest) + QDir::separator() + src.fileName()).toStdString());
+            QString filePath = QString::fromStdString(dest) + QDir::separator();
+            filePath += (convert_to_jpg && (src.suffix() != "jpg")? src.baseName() + ".jpg" : src.fileName());
+            img.write(filePath.toStdString());
         }));
 
         progress->exec();

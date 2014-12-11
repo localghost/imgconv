@@ -7,7 +7,7 @@ namespace im {
 namespace {
 void adjust_size_to_aspect_ratio(const ImagePtr& image, size_t& width, size_t& height)
 {
-    if (width > height)
+    if ((width > height) || ((width == height) && (image->columns > image->rows)))
     {
         float scale = (float)width / (float)image->columns;
         height = image->rows * scale;
