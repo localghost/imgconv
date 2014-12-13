@@ -1,12 +1,31 @@
 #include "image.h"
 
 #include <cstring>
+#include <cstdlib>
 #include <stdexcept>
-#include <QDebug>
+#include <iostream>
 
 #include "imagefilter.h"
 
 namespace im {
+
+namespace {
+void finalizeMagickCore()
+{
+  MagickCoreTerminus();
+}
+
+bool initializeMagickCore();
+bool initialized = initializeMagickCore();
+bool initializeMagickCore()
+{
+  static_cast<void>(initialized);
+  MagickCoreGenesis("imgconv", MagickTrue);
+  ::atexit(&finalizeMagickCore);
+  return true;
+}
+}
+
 Image::Image(const std::string& path)
 {
    read(path);
@@ -14,7 +33,7 @@ Image::Image(const std::string& path)
 
 void Image::read(const std::string& path)
 {
-    qDebug("read");
+  std::cerr << "read" << std::endl;
     ExceptionInfo* ex = AcquireExceptionInfo();
     ExceptionInfoPtr guard{ex, &DestroyExceptionInfo};
     info_.reset(AcquireImageInfo());
@@ -36,7 +55,7 @@ size_t Image::height() const
 
 void Image::write(const std::string& path)
 {
-    qDebug("write");
+  std::cerr << "write" << std::endl;
     std::strncpy(image_->filename, path.c_str(), MaxTextExtent);
     WriteImage(info_.get(), image_.get());
 }

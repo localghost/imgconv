@@ -1,7 +1,8 @@
 #include "resizefilter.h"
 
-#include <QDebug>
 #include <magick/MagickCore.h>
+
+#include "log.h"
 
 namespace im {
 namespace {
@@ -36,18 +37,18 @@ ImagePtr ResizeFilter::run(const ImagePtr& image)
 {
    if (0 == width_ || 0 == height_)
    {
-      qDebug() << "Invalid size";
+      LOG("Invalid size");
       return make_image_ptr(nullptr);
    }
 
-    qDebug() << "current size: " << image->columns << "x" << image->rows;
+    LOG("current size: " << image->columns << "x" << image->rows);
 
     std::size_t width = width_;
     std::size_t height = height_;
 
     if (keep_aspect_ratio_)
         adjust_size_to_aspect_ratio(image, width, height);
-    qDebug() << "new size: " << width << "x" << height;
+    LOG("new size: " << width << "x" << height);
 
     ::ExceptionInfo* ex = AcquireExceptionInfo();
     ExceptionInfoPtr guard{ex, &DestroyExceptionInfo};

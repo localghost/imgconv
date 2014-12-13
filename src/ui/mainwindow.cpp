@@ -13,9 +13,9 @@
 #include <QProgressDialog>
 #include <QMenu>
 #include "dialog.h"
-#include "image.h"
-#include "imagefilter.h"
-#include "resizefilter.h"
+#include <im/image.h>
+#include <im/imagefilter.h>
+#include <im/resizefilter.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
