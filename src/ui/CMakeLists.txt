@@ -24,8 +24,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 add_executable(${TARGET_UI}
     MACOSX_BUNDLE
     ${SOURCES}
-#    ${UIS}
+    ${UIS}
     ${GENERATED_SOURCES}
     )
-target_link_libraries(${TARGET_UI} ${Qt5Widgets} ${TARGET_IM})
+target_link_libraries(${TARGET_UI} ${TARGET_BASE} ${TARGET_IM} ${Qt5Widgets} ${Qt5Concurrent})
 qt5_use_modules(${TARGET_UI} Widgets Concurrent)

@@ -13,6 +13,8 @@
 #include <QProgressDialog>
 #include <QMenu>
 #include "dialog.h"
+#include <base/exception.h>
+#include <base/log.h>
 #include <im/image.h>
 #include <im/imagefilter.h>
 #include <im/resizefilter.h>
@@ -97,7 +99,7 @@ void MainWindow::on_actionResize_triggered()
             img.read(src.filePath().toStdString());
             img.apply_filter(filter.get());
             QString filePath = QString::fromStdString(dest) + QDir::separator();
-            filePath += (convert_to_jpg && (src.suffix() != "jpg")? src.baseName() + ".jpg" : src.fileName());
+            filePath += (convert_to_jpg && (img.format() != im::ImageFormat::JPG)? src.baseName() + ".jpg" : src.fileName());
             img.write(filePath.toStdString());
         }));
 
@@ -112,8 +114,9 @@ void MainWindow::on_actionResize_triggered()
         {
             QMessageBox::warning(this,
                                  tr("Result"),
-                                 tr("Processing some of the images failed.\nPlease copy below line and send to zkostrzewa@gmail.com\n") + ex.what());
+                                 tr("Processing some of the images failed.\nCheckout standard error output.\n"));
         }
+
     }
 }
 

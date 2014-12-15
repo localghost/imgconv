@@ -5,6 +5,7 @@
 #include <string>
 #include <memory>
 #include <magick/MagickCore.h>
+#include <im/imageformat.h>
 
 namespace im {
 using ImagePtr = std::unique_ptr<::Image, decltype(&DestroyImage)>;
@@ -30,6 +31,8 @@ public:
 
    std::size_t height() const;
 
+   ImageFormat format() const;
+
    void write(const std::string& path);
 
    void apply_filter(ImageFilter* filter);
@@ -37,6 +40,7 @@ public:
 private:
    ImagePtr image_{nullptr, &DestroyImage};
    ImageInfoPtr info_{nullptr, &DestroyImageInfo};
+   ImageFormat format_;
 };
 }
 
