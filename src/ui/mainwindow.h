@@ -32,6 +32,12 @@ private slots:
 
     void on_actionRemove_All_triggered();
 
+    void on_actionQuit_triggered();
+
+    void on_actionPipelineEditor_triggered();
+
+    void on_actionResize_Export_triggered();
+
 private:
     void setupListContextMenu();
 

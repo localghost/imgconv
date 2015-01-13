@@ -5,6 +5,7 @@ set(HDRS
     thread.h
     task.h
     waitable_event.h
+  assert.h
    )
 
 set(SRCS

@@ -2,20 +2,33 @@ find_package(Qt5Widgets)
 find_package(Qt5Concurrent)
 
 set(SOURCES
-    main.cpp
-    mainwindow.cpp
-    dialog.cpp
-   )
+  main.cpp
+  mainwindow.cpp
+  dialog.cpp
+  pipelineeditor.cpp
+  action.cpp
+  resizeaction.cpp
+  exportaction.cpp
+  actionregistry.cpp
+)
 
 set(HEADERS
-    mainwindow.h
-    dialog.h
-   )
+  mainwindow.h
+  dialog.h
+  pipelineeditor.h
+  action.h
+  resizeaction.h
+  exportaction.h
+  actionregistry.h
+)
 
 set(UIS
-    mainwindow.ui
-    dialog.ui
-   )
+  mainwindow.ui
+  dialog.ui
+  pipelineeditor.ui
+  resizeaction.ui
+  exportaction.ui
+)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)

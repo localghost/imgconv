@@ -12,13 +12,13 @@ find_package(PkgConfig)
 # via `im` headers
 # TODO move it to `im` once the MagickCore is completely hidden
 # from `ui`
-pkg_search_module(magick REQUIRED MagickCore)
-include_directories(${magick_INCLUDE_DIRS})
-link_directories(${magick_LIBRARY_DIRS})
+pkg_search_module(Magick REQUIRED MagickCore)
+include_directories(${Magick_INCLUDE_DIRS})
+link_directories(${Magick_LIBRARY_DIRS})
 add_definitions("-DMAGICKCORE_HDRI_ENABLE=0")
 add_definitions("-DMAGICKCORE_QUANTUM_DEPTH=16")
 
-find_package(Boost REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system filesystem)
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 

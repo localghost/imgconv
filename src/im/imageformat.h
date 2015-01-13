@@ -1,5 +1,5 @@
-#ifndef IMAGEFORMAT_H
-#define IMAGEFORMAT_H
+#ifndef IM_IMAGEFORMAT_H
+#define IM_IMAGEFORMAT_H
 
 namespace im {
 enum class ImageFormat
@@ -12,4 +12,4 @@ enum class ImageFormat
   RAW
 };
 }
-#endif // IMAGEFORMAT_H
+#endif

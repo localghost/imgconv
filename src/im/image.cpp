@@ -7,7 +7,8 @@
 #include <base/log.h>
 #include <base/exception.h>
 
-#include "imagefilter.h"
+#include "imageaction.h"
+#include "exceptioninfo.h"
 
 namespace im {
 
@@ -57,11 +58,10 @@ Image::Image(const std::string& path)
 void Image::read(const std::string& path)
 {
   LOG_DEBUG << "ENTER";
-  ExceptionInfo* ex = AcquireExceptionInfo();
-  ExceptionInfoPtr guard{ex, &DestroyExceptionInfo};
-  info_.reset(AcquireImageInfo());
+  ExceptionInfoHandle ex{::AcquireExceptionInfo()};
+  info_ = ::AcquireImageInfo();
   std::strncpy(info_->filename, path.c_str(), MaxTextExtent);
-  image_.reset(::ReadImage(info_.get(), ex));
+  image_ = ::ReadImage(*info_, *ex);
   if (!image_)
   {
     LOG_ERROR << "Could not read image " << path << " [" << ex->reason << "]";
@@ -89,12 +89,14 @@ ImageFormat Image::format() const
 void Image::write(const std::string& path)
 {
   LOG_DEBUG << "Write image as " << path;
+  LOG_DEBUG << "Current filename: " << image_->filename;
+  ImageInfoHandle info{::CloneImageInfo(NULL)};
   std::strncpy(image_->filename, path.c_str(), MaxTextExtent);
-  ::WriteImage(info_.get(), image_.get());
+  ::WriteImage(*info, *image_);
 }
 
-void Image::apply_filter(ImageFilter* filter)
+void Image::call(ImageAction* action)
 {
-   image_ = filter->run(image_);
+   image_ = action->run(std::move(image_));
 }
 }

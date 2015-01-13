@@ -39,6 +39,49 @@
    <addaction name="actionRemove_All"/>
    <addaction name="actionResize"/>
   </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>400</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionAdd"/>
+    <addaction name="actionRemove"/>
+    <addaction name="actionRemove_All"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuAction">
+    <property name="title">
+     <string>Action</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuPipeline">
+    <property name="title">
+     <string>Pipeline</string>
+    </property>
+    <addaction name="actionPipelineEditor"/>
+    <addaction name="separator"/>
+    <addaction name="actionResize_Export"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuAction"/>
+   <addaction name="menuPipeline"/>
+   <addaction name="menuHelp"/>
+  </widget>
   <action name="actionResize">
    <property name="enabled">
     <bool>false</bool>
@@ -72,6 +115,26 @@
    </property>
    <property name="toolTip">
     <string>Removes all elements from the list.</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Quit</string>
+   </property>
+  </action>
+  <action name="actionPipelineEditor">
+   <property name="text">
+    <string>Editor</string>
+   </property>
+  </action>
+  <action name="actionResize_Export">
+   <property name="text">
+    <string>Resize &amp;&amp; Export</string>
    </property>
   </action>
  </widget>

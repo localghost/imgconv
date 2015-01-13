@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <QApplication>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDebug>
@@ -12,12 +13,19 @@
 #include <QtConcurrent>
 #include <QProgressDialog>
 #include <QMenu>
+#include <QAction>
 #include "dialog.h"
+#include "pipelineeditor.h"
 #include <base/exception.h>
 #include <base/log.h>
 #include <im/image.h>
-#include <im/imagefilter.h>
-#include <im/resizefilter.h>
+#include <im/imageaction.h>
+#include <im/resizeaction.h>
+#include <im/exportaction.h>
+
+#include "action.h"
+#include "resizeaction.h"
+#include "exportaction.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -26,6 +34,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     setupListContextMenu();
+    QAction* action = new QAction("raz", this);
+    ui->menuAction->addAction(action);
 }
 
 MainWindow::~MainWindow()
@@ -92,15 +102,26 @@ void MainWindow::on_actionResize_triggered()
         QObject::connect(&watcher, SIGNAL(progressRangeChanged(int,int)), progress, SLOT(setRange(int,int)));
         QObject::connect(&watcher, SIGNAL(progressValueChanged(int)), progress, SLOT(setValue(int)));
 
-        std::unique_ptr<im::ImageFilter> filter{new im::ResizeFilter{width, height, keep_aspect_ratio}};
-        watcher.setFuture(QtConcurrent::map(files.begin(), files.end(), [&filter, &dest, convert_to_jpg](const QString& path){
+
+        std::unique_ptr<im::ImageAction> filter{new im::ResizeAction{width, height, keep_aspect_ratio}};
+        std::unique_ptr<im::ExportAction> saveas{new im::ExportAction{dest}};
+        if (convert_to_jpg)
+        {
+          saveas->format(im::ExportFormat{im::ImageFormat::JPG, 10});
+        }
+
+        std::vector<std::unique_ptr<im::ImageAction>> actions;
+        actions.push_back(std::move(filter));
+        actions.push_back(std::move(saveas));
+
+        watcher.setFuture(QtConcurrent::map(files.begin(), files.end(), [&actions](const QString& path){
             QFileInfo src{path};
             im::Image img;
             img.read(src.filePath().toStdString());
-            img.apply_filter(filter.get());
-            QString filePath = QString::fromStdString(dest) + QDir::separator();
-            filePath += (convert_to_jpg && (img.format() != im::ImageFormat::JPG)? src.baseName() + ".jpg" : src.fileName());
-            img.write(filePath.toStdString());
+            for (auto& action : actions)
+            {
+              img.call(action.get());
+            }
         }));
 
         progress->exec();
@@ -137,4 +158,55 @@ void MainWindow::on_actionRemove_All_triggered()
     ui->actionResize->setEnabled(false);
     ui->actionRemove->setEnabled(false);
     ui->actionRemove_All->setEnabled(false);
+}
+
+void MainWindow::on_actionQuit_triggered()
+{
+  QApplication::closeAllWindows();
+}
+
+void MainWindow::on_actionPipelineEditor_triggered()
+{
+  auto dialog = new PipelineEditor(this);
+  dialog->exec();
+}
+
+void MainWindow::on_actionResize_Export_triggered()
+{
+  auto progress = new QProgressDialog();
+  progress->setLabelText(tr("Processing images..."));
+
+  QFutureWatcher<void> watcher;
+  QObject::connect(&watcher, SIGNAL(finished()), progress, SLOT(reset()));
+  QObject::connect(progress, SIGNAL(canceled()), &watcher, SLOT(cancel()));
+  QObject::connect(&watcher, SIGNAL(progressRangeChanged(int,int)), progress, SLOT(setRange(int,int)));
+  QObject::connect(&watcher, SIGNAL(progressValueChanged(int)), progress, SLOT(setValue(int)));
+
+  Pipeline pipeline;
+  pipeline.add_action(std::unique_ptr<Action>(new ResizeAction(this)));
+  pipeline.add_action(std::unique_ptr<Action>(new ExportAction(this)));
+
+  pipeline.configure();
+
+  watcher.setFuture(QtConcurrent::map(files.begin(), files.end(), [&pipeline](const QString& path){
+      QFileInfo src{path};
+      im::Image img;
+      img.read(src.filePath().toStdString());
+      pipeline.run(img);
+  }));
+
+  progress->exec();
+
+  try
+  {
+      watcher.waitForFinished();
+      QMessageBox::information(this, tr("Result"), tr("All images processed successfully."));
+  }
+  catch (const std::exception& ex)
+  {
+      QMessageBox::warning(this,
+                           tr("Result"),
+                           tr("Processing some of the images failed.\nCheckout standard error output.\n"));
+  }
+
 }

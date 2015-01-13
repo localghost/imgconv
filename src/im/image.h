@@ -6,18 +6,30 @@
 #include <memory>
 #include <magick/MagickCore.h>
 #include <im/imageformat.h>
+#include <im/handle.h>
 
 namespace im {
-using ImagePtr = std::unique_ptr<::Image, decltype(&DestroyImage)>;
-using ImageInfoPtr = std::unique_ptr<::ImageInfo, decltype(&DestroyImageInfo)>;
-using ExceptionInfoPtr = std::unique_ptr<::ExceptionInfo, decltype(&DestroyExceptionInfo)>;
+class ImageAction;
 
-inline ImagePtr make_image_ptr(::Image* image)
+struct ImageHandleDeleter
 {
-   return ImagePtr{image, &DestroyImage};
-}
+  void operator()(::Image* image)
+  {
+    ::DestroyImage(image);
+  }
+};
 
-class ImageFilter;
+using ImageHandle = Handle<::Image, ImageHandleDeleter>;
+
+struct ImageInfoHandleDeleter
+{
+  void operator()(::ImageInfo* info)
+  {
+    ::DestroyImageInfo(info);
+  }
+};
+
+using ImageInfoHandle = Handle<::ImageInfo, ImageInfoHandleDeleter>;
 
 class Image
 {
@@ -35,13 +47,13 @@ public:
 
    void write(const std::string& path);
 
-   void apply_filter(ImageFilter* filter);
+   void call(ImageAction* action);
 
 private:
-   ImagePtr image_{nullptr, &DestroyImage};
-   ImageInfoPtr info_{nullptr, &DestroyImageInfo};
+   ImageHandle image_;
+   ImageInfoHandle info_;
    ImageFormat format_;
 };
 }
 
-#endif // IM_IMAGE_H
+#endif
