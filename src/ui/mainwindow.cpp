@@ -14,6 +14,7 @@
 #include <QProgressDialog>
 #include <QMenu>
 #include <QAction>
+#include <QPalette>
 #include "dialog.h"
 #include "pipelineeditor.h"
 #include <base/exception.h>
@@ -135,7 +136,7 @@ void MainWindow::on_actionResize_triggered()
         {
             QMessageBox::warning(this,
                                  tr("Result"),
-                                 tr("Processing some of the images failed.\nCheckout standard error output.\n"));
+                                 tr("Processing some of the images failed.\nCheck standard error output.\n"));
         }
 
     }
@@ -173,6 +174,14 @@ void MainWindow::on_actionPipelineEditor_triggered()
 
 void MainWindow::on_actionResize_Export_triggered()
 {
+  Pipeline pipeline;
+  pipeline.add_action(std::unique_ptr<Action>(new ResizeAction(this)));
+  pipeline.add_action(std::unique_ptr<Action>(new ExportAction(this)));
+
+  if (!pipeline.configure()) return;
+
+  im::Pipeline impipe = pipeline.compile();
+
   auto progress = new QProgressDialog();
   progress->setLabelText(tr("Processing images..."));
 
@@ -182,17 +191,11 @@ void MainWindow::on_actionResize_Export_triggered()
   QObject::connect(&watcher, SIGNAL(progressRangeChanged(int,int)), progress, SLOT(setRange(int,int)));
   QObject::connect(&watcher, SIGNAL(progressValueChanged(int)), progress, SLOT(setValue(int)));
 
-  Pipeline pipeline;
-  pipeline.add_action(std::unique_ptr<Action>(new ResizeAction(this)));
-  pipeline.add_action(std::unique_ptr<Action>(new ExportAction(this)));
-
-  pipeline.configure();
-
-  watcher.setFuture(QtConcurrent::map(files.begin(), files.end(), [&pipeline](const QString& path){
+  watcher.setFuture(QtConcurrent::map(files.begin(), files.end(), [&impipe](const QString& path){
       QFileInfo src{path};
       im::Image img;
       img.read(src.filePath().toStdString());
-      pipeline.run(img);
+      impipe.run(img);
   }));
 
   progress->exec();
@@ -206,7 +209,6 @@ void MainWindow::on_actionResize_Export_triggered()
   {
       QMessageBox::warning(this,
                            tr("Result"),
-                           tr("Processing some of the images failed.\nCheckout standard error output.\n"));
+                           tr("Processing some of the images failed.\nCheck standard error output.\n"));
   }
-
 }

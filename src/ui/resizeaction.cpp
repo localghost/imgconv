@@ -17,9 +17,9 @@ ResizeAction::~ResizeAction()
   delete ui_;
 }
 
-void ResizeAction::configure()
+bool ResizeAction::configure()
 {
-  exec();
+  return (exec() == QDialog::Accepted);
 }
 
 std::unique_ptr<im::ImageAction> ResizeAction::compile()

@@ -20,7 +20,7 @@ public:
   explicit ResizeAction(QWidget *parent = 0);
   ~ResizeAction();
 
-  void configure() override;
+  bool configure() override;
   std::unique_ptr<im::ImageAction> compile() override;
   QString description() const override { return ""; }
 

@@ -13,12 +13,12 @@ void adjust_size_to_aspect_ratio(const ImageHandle& image, size_t& width, size_t
 {
   if ((width > height) || ((width == height) && (image->columns > image->rows)))
   {
-    float scale = (float)width / (float)image->columns;
+    float const scale = (float)width / (float)image->columns;
     height = image->rows * scale;
   }
   else
   {
-    float scale = (float)height / (float)image->rows;
+    float const scale = (float)height / (float)image->rows;
     width = image->columns * scale;
   }
 }

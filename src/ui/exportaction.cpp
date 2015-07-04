@@ -21,9 +21,9 @@ ExportAction::~ExportAction()
   delete ui_;
 }
 
-void ExportAction::configure()
+bool ExportAction::configure()
 {
-  exec();
+  return (exec() == QDialog::Accepted);
 }
 
 std::unique_ptr<im::ImageAction> ExportAction::compile()

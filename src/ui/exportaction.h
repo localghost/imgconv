@@ -16,7 +16,7 @@ public:
   explicit ExportAction(QWidget* parent = nullptr);
   ~ExportAction();
 
-  void configure() override;
+  bool configure() override;
   std::unique_ptr<im::ImageAction> compile() override;
   std::string name() const;
   QString description() const override { return ""; }

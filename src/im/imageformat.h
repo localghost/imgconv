@@ -12,4 +12,5 @@ enum class ImageFormat
   RAW
 };
 }
+
 #endif

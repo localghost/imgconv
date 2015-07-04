@@ -7,16 +7,11 @@
 #include <im/image.h>
 #include <im/imageaction.h>
 
-//namespace im {
-//class Image;
-//}
-//
-
 class Action
 {
 public:
   virtual ~Action() = 0;
-  virtual void configure() = 0;
+  virtual bool configure() = 0;
   virtual std::unique_ptr<im::ImageAction> compile() = 0;
   virtual QString description() const = 0;
 };
@@ -26,34 +21,35 @@ class Pipeline
 public:
   void add_action(std::unique_ptr<Action> action)
   {
-    pipeline.push_back(std::move(action));
+    actions_.push_back(std::move(action));
   }
 
-  void configure() // temporary
+  bool configure() // temporary
   {
-    for (const auto& action : pipeline)
+    for (const auto& action : actions_)
     {
-      action->configure();
+      if (!action->configure()) return false;
     }
+    return true;
   }
 
-  // TODO compile im::Pipeline and run it (to not create new action for each image).
-  void run(im::Image& image)
+  im::Pipeline compile()
   {
-    for (const auto& action : pipeline)
+    im::Pipeline result;
+    for (const auto& action : actions_)
     {
-      auto act = action->compile();
-      image.call(act.get());
+      result.add_action(action->compile());
     }
+    return result;
   }
 
   const std::vector<std::unique_ptr<Action>>& get_actions() const
   {
-    return pipeline;
+    return actions_;
   }
 
 private:
-  std::vector<std::unique_ptr<Action>> pipeline;
+  std::vector<std::unique_ptr<Action>> actions_;
 };
 
 //class NewAction
