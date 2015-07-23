@@ -9,7 +9,7 @@ set(SOURCES
   action.cpp
   resizeaction.cpp
   exportaction.cpp
-  actionregistry.cpp
+#  actionregistry.cpp
 )
 
 set(HEADERS
@@ -19,7 +19,7 @@ set(HEADERS
   action.h
   resizeaction.h
   exportaction.h
-  actionregistry.h
+#  actionregistry.h
 )
 
 set(UIS
