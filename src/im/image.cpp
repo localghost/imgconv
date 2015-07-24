@@ -46,7 +46,7 @@ ImageFormat magickToFormat(const char* const magick)
   {
     return ImageFormat::GIF;
   }
-  THROW(base::exception{} << base::error_info::message{"Unsupported image format [" + std::string(magick) + "]"});
+  THROW_MSG(base::exception{}, "Unsupported image format [" << std::string(magick) << "]");
 }
 }
 
@@ -57,28 +57,28 @@ Image::Image(const std::string& path)
 
 void Image::read(const std::string& path)
 {
-  LOG_DEBUG << "ENTER";
-  ExceptionInfoHandle ex{::AcquireExceptionInfo()};
-  info_ = ::AcquireImageInfo();
-  std::strncpy(info_->filename, path.c_str(), MaxTextExtent);
-  image_ = ::ReadImage(*info_, *ex);
-  if (!image_)
+  ExceptionInfo ex;
+  imageInfoHandle_ = ::AcquireImageInfo();
+  std::strncpy(imageInfoHandle_->filename, path.c_str(), MaxTextExtent);
+  imageHandle_ = ::ReadImage(*imageInfoHandle_, ex.handle());
+  if (!imageHandle_)
   {
-    LOG_ERROR << "Could not read image " << path << " [" << ex->reason << "]";
-    THROW(base::exception{} << base::error_info::message{"Could not read image " + path});
+    LOG_ERROR << "Could not read image " << path << " [" << ex.message() << "]";
+    THROW_MSG(base::exception{}, "Could not read image " << path);
   }
-  format_ = magickToFormat(image_->magick);
-  LOG_DEBUG << "MAGICK = " << image_->magick;
+
+  LOG_DEBUG << "MAGICK = " << imageHandle_->magick;
+  format_ = magickToFormat(imageHandle_->magick);
 }
 
 size_t Image::width() const
 {
-   return image_->columns;
+   return imageHandle_->columns;
 }
 
 size_t Image::height() const
 {
-   return image_->rows;
+   return imageHandle_->rows;
 }
 
 ImageFormat Image::format() const
@@ -89,14 +89,19 @@ ImageFormat Image::format() const
 void Image::write(const std::string& path)
 {
   LOG_DEBUG << "Write image as " << path;
-  LOG_DEBUG << "Current filename: " << image_->filename;
+  LOG_DEBUG << "Current filename: " << imageHandle_->filename;
+
   ImageInfoHandle info{::CloneImageInfo(NULL)};
-  std::strncpy(image_->filename, path.c_str(), MaxTextExtent);
-  ::WriteImage(*info, *image_);
+  std::strncpy(imageHandle_->filename, path.c_str(), MaxTextExtent);
+  if (::WriteImage(*info, *imageHandle_) == MagickFalse)
+  {
+    LOG_ERROR << "Could not write image to: " << path;
+    THROW_MSG(base::exception{}, "Could not write image to " << path);
+  }
 }
 
 void Image::call(ImageAction* action)
 {
-   image_ = action->run(std::move(image_));
+   imageHandle_ = action->run(std::move(imageHandle_));
 }
 }

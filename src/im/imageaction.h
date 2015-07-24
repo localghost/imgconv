@@ -9,6 +9,7 @@ class ImageAction
 {
 public:
    virtual ~ImageAction() = 0;
+
    virtual ImageHandle run(ImageHandle image) = 0;
 
 protected:

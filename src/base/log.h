@@ -7,7 +7,13 @@
 
 namespace base {
 namespace log {
+
+// FIXME 2015-07-24 This is a workaround for GCC, see https://gcc.gnu.org/bugzilla/show_bug.cgi?id=43407
+#if __GNUC__
+enum class severity : int EXPORT_API
+#else
 enum class EXPORT_API severity
+#endif // __GNUC__
 {
     Info,
     Debug,

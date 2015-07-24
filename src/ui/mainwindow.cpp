@@ -117,8 +117,7 @@ void MainWindow::on_actionResize_triggered()
 
         watcher.setFuture(QtConcurrent::map(files.begin(), files.end(), [&actions](const QString& path){
             QFileInfo src{path};
-            im::Image img;
-            img.read(src.filePath().toStdString());
+            im::Image img(src.filePath().toStdString());
             for (auto& action : actions)
             {
               img.call(action.get());
@@ -193,8 +192,7 @@ void MainWindow::on_actionResize_Export_triggered()
 
   watcher.setFuture(QtConcurrent::map(files.begin(), files.end(), [&impipe](const QString& path){
       QFileInfo src{path};
-      im::Image img;
-      img.read(src.filePath().toStdString());
+      im::Image img(src.filePath().toStdString());
       impipe.run(img);
   }));
 

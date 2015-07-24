@@ -28,6 +28,7 @@ std::string formatToExtension(ImageFormat format)
     return "arw";
   }
   BOOST_ASSERT_MSG(false, "Image format not supported.");
+  return "";
 }
 }
 

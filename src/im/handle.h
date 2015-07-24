@@ -2,8 +2,27 @@
 #define IM_HANDLE_H
 
 #include <type_traits>
+#include <utility>
 
 namespace im {
+template<typename T, T* (*D)(T*)>
+struct MagickFunctionDeleterHelper
+{
+  void operator()(T* obj)
+  {
+    D(obj);
+  }
+};
+
+template<typename T, void (*D)(T*)>
+struct VoidFunctionDeleterHelper
+{
+  void operator()(T* obj)
+  {
+    D(obj);
+  }
+};
+
 // precondition: D() does not throw
 template<typename T, typename D>
 class Handle
@@ -13,12 +32,16 @@ class Handle
 
 public:
   Handle() = default;
+
   explicit Handle(T* ptr) : ptr_{ptr} {}
+
   Handle(const Handle&) = delete;
+
   Handle(Handle&& other) : ptr_{other.ptr_}
   {
     other.ptr_ = nullptr;
   }
+
   ~Handle()
   {
     if (ptr_)
@@ -34,6 +57,7 @@ public:
     std::swap(tmp.ptr_, ptr_);
     return *this;
   }
+
   Handle& operator=(T* ptr)
   {
     Handle tmp(ptr);
@@ -45,14 +69,17 @@ public:
   {
     return ptr_;
   }
+
   const T* operator->() const
   {
     return ptr_;
   }
+
   T* operator*()
   {
     return ptr_;
   }
+
   const T* operator*() const
   {
     return ptr_;

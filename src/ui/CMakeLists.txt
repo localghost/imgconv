@@ -1,6 +1,8 @@
 find_package(Qt5Widgets)
 find_package(Qt5Concurrent)
 
+include_directories(${Qt5Widgets_INCLUDE_DIRS})
+
 set(SOURCES
   main.cpp
   mainwindow.cpp

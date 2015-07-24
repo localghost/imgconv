@@ -4,6 +4,7 @@ set(SOURCES
   resizeaction.cpp
   exportaction.cpp
   actionregistry.cpp
+  exceptioninfo.cpp
 )
 
 set(HEADERS

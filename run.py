@@ -7,12 +7,13 @@ import pwd
 PROJECT_PATH = os.path.dirname(os.path.realpath(__file__))
 DOCKER_PATH = os.path.join(PROJECT_PATH, r'docker')
 
+UID = os.getuid()
+GID = os.getgid()
+LOGIN = pwd.getpwuid(UID)[0]
+
 class COMMON_CONFIG(object):
     X11_SOCKET_PATH_HOST = r'/tmp/.X11-unix'
     X11_SOCKET_PATH_GUEST = X11_SOCKET_PATH_HOST
-
-    RUN_AS_UID = os.getuid()
-    RUN_AS_GID = os.getgid()
 
     DISPLAY = os.environ.get('DISPLAY')
 
@@ -27,7 +28,7 @@ class DEV_ENV_CONFIG(object):
     SOURCES_PATH_GUEST = r'/opt/sources/imgconv'
 
     HOME_PATH_HOST = os.path.join(PATH, r'home')
-    HOME_PATH_GUEST = os.path.join(r'/home', pwd.getpwuid(COMMON_CONFIG.RUN_AS_UID)[0])
+    HOME_PATH_GUEST = os.path.join(r'/home', LOGIN)
     
 class ImgconvError(RuntimeError):
     pass
@@ -48,7 +49,7 @@ def docker_run_cmd(image, cmd, shared_folders=None, run_as_root=False, with_x=Fa
         _cmd += ' ' + ' '.join(['-v ' + ':'.join(sf) for sf in shared_folders])
     
     if not run_as_root:
-        _cmd += ' --user=%d:%d' % (COMMON_CONFIG.RUN_AS_UID, COMMON_CONFIG.RUN_AS_GID)
+        _cmd += ' --user=%d:%d' % (UID, GID)
 
     if with_x:
         if not os.path.exists(COMMON_CONFIG.X11_SOCKET_PATH_HOST) or not COMMON_CONFIG.DISPLAY:
@@ -59,6 +60,13 @@ def docker_run_cmd(image, cmd, shared_folders=None, run_as_root=False, with_x=Fa
     _cmd += ' %s %s' % (image, cmd)
 
     run_cmd(_cmd, DEV_ENV_CONFIG.PATH)
+
+def user_exists(username):
+    try:
+        docker_run_cmd(COMMON_CONFIG.IMAGE, 'id %s' % username, run_as_root=True)
+        return True
+    except:
+        return False
 
 def run_ide():
     # xhost +local:`docker inspect --format='{{ .Config.Hostname }}' $containerId`

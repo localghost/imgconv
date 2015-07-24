@@ -74,10 +74,10 @@ ImageHandle ResizeAction::run(ImageHandle image)
     THROW(base::exception{});
   }
 
-  ExceptionInfoHandle ex{AcquireExceptionInfo()};
-  ImageHandle result{::ResizeImage(*image, width, height, LanczosFilter, 1.0, *ex)};
+  ExceptionInfo ex;
+  ImageHandle result{::ResizeImage(*image, width, height, LanczosFilter, 1.0, ex.handle())};
   if (!result)
-    throw std::runtime_error(ex->reason);
+    throw std::runtime_error(ex.message());
   return result;
 }
 }

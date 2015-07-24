@@ -5,6 +5,11 @@ set(TARGET_IM "imgconv-im")
 set(TARGET_UI "imgconv")
 
 add_definitions("-std=c++11")
+add_definitions("-pedantic")
+add_definitions("-Wall")
+add_definitions("-Wextra")
+add_definitions("-Werror")
+add_definitions("-DDEBUG_BUILD=1")
 
 find_package(PkgConfig)
 
@@ -21,6 +26,8 @@ add_definitions("-DMAGICKCORE_QUANTUM_DEPTH=16")
 find_package(Boost REQUIRED COMPONENTS system filesystem)
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
+
+#message(${PROJECT_SOURCE_DIR}/src/im)
 
 add_subdirectory(base)
 add_subdirectory(im)

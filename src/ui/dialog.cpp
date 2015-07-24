@@ -65,7 +65,7 @@ void Dialog::on_checkOverwrite_stateChanged(int state)
    ui->destination->setEnabled(state == Qt::CheckState::Unchecked);
 }
 
-void Dialog::on_checkConvert_stateChanged(int state)
+void Dialog::on_checkConvert_stateChanged(int /*state*/)
 {
 //    ui->editQuality->setEnabled(state == Qt::CheckState::Checked);
 }

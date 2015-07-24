@@ -11,33 +11,16 @@
 namespace im {
 class ImageAction;
 
-struct ImageHandleDeleter
-{
-  void operator()(::Image* image)
-  {
-    ::DestroyImage(image);
-  }
-};
+using ImageHandleDeleter = MagickFunctionDeleterHelper< ::Image, &::DestroyImage>;
+using ImageHandle = Handle< ::Image, ImageHandleDeleter>;
 
-using ImageHandle = Handle<::Image, ImageHandleDeleter>;
-
-struct ImageInfoHandleDeleter
-{
-  void operator()(::ImageInfo* info)
-  {
-    ::DestroyImageInfo(info);
-  }
-};
-
-using ImageInfoHandle = Handle<::ImageInfo, ImageInfoHandleDeleter>;
+using ImageInfoHandleDeleter = MagickFunctionDeleterHelper< ::ImageInfo, &::DestroyImageInfo>;
+using ImageInfoHandle = Handle< ::ImageInfo, ImageInfoHandleDeleter>;
 
 class Image
 {
 public:
-   Image() = default;
    explicit Image(const std::string& path);
-
-   void read(const std::string& path);
 
    std::size_t width() const;
 
@@ -50,8 +33,10 @@ public:
    void call(ImageAction* action);
 
 private:
-   ImageHandle image_;
-   ImageInfoHandle info_;
+   void read(const std::string& path);
+
+   ImageHandle imageHandle_;
+   ImageInfoHandle imageInfoHandle_;
    ImageFormat format_;
 };
 }

@@ -2,7 +2,7 @@
 #define IM_RESIZEACTION_H
 
 #include <cstddef>
-#include "imageaction.h"
+#include <im/imageaction.h>
 
 namespace im {
 class ResizeAction : public ImageAction

@@ -2,6 +2,7 @@
 #define BASE_EXCEPTION_H
 
 #include <string>
+#include <sstream>
 #include <exception>
 #include <boost/exception/all.hpp>
 #include <base/export.h>
@@ -26,6 +27,13 @@ void verbose_terminate_handler();
 
 #define THROW(ExceptionObject) \
         ::boost::throw_exception(ExceptionObject << EXCEPTION_LOCATION)
+
+#define THROW_MSG(ExceptionObject, Message) \
+  do { \
+    ::std::ostringstream oss; \
+    oss << Message; \
+    THROW(ExceptionObject << ::base::error_info::message{oss.str()}); \
+  } while (false)
 
 namespace base {
 /// Exception resulted from an I/O operation
