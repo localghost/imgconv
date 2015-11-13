@@ -5,12 +5,12 @@ ExceptionInfo::ExceptionInfo() : handle_{::AcquireExceptionInfo()}
 {
 }
 
-::ExceptionInfo* ExceptionInfo::handle()
+::ExceptionInfo* ExceptionInfo::native()
 {
   return *handle_;
 }
 
-std::string ExceptionInfo::message() const
+std::string ExceptionInfo::reason() const
 {
   return handle_->reason;
 }

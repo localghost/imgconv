@@ -60,10 +60,10 @@ void Image::read(const std::string& path)
   ExceptionInfo ex;
   imageInfoHandle_ = ::AcquireImageInfo();
   std::strncpy(imageInfoHandle_->filename, path.c_str(), MaxTextExtent);
-  imageHandle_ = ::ReadImage(*imageInfoHandle_, ex.handle());
+  imageHandle_ = ::ReadImage(*imageInfoHandle_, ex.native());
   if (!imageHandle_)
   {
-    LOG_ERROR << "Could not read image " << path << " [" << ex.message() << "]";
+    LOG_ERROR << "Could not read image " << path << " [" << ex.reason() << "]";
     THROW_MSG(base::exception{}, "Could not read image " << path);
   }
 

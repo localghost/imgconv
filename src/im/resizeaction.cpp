@@ -75,9 +75,9 @@ ImageHandle ResizeAction::run(ImageHandle image)
   }
 
   ExceptionInfo ex;
-  ImageHandle result{::ResizeImage(*image, width, height, LanczosFilter, 1.0, ex.handle())};
+  ImageHandle result{::ResizeImage(*image, width, height, LanczosFilter, 1.0, ex.native())};
   if (!result)
-    throw std::runtime_error(ex.message());
+    throw std::runtime_error(ex.reason());
   return result;
 }
 }

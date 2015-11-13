@@ -35,30 +35,6 @@ public:
 private:
   std::vector<std::unique_ptr<ImageAction>> actions_;
 };
-
-//class Action
-//{
-//private:
-//  class Concept
-//  {
-//  public:
-//    virtual ~Concept() {}
-//    virtual ImageHandle run(const ImageHandle& image) = 0;
-//  };
-
-//  template<typename T>
-//  class Model : Concept
-//  {
-//  public:
-//    explicit Model(T object) : object_(object) { }
-
-////  private:
-////    virtual ImageHandle run(const ImageHandle &image) override
-////    {
-//////      return object
-////    }
-//  };
-//};
 }
 
 #endif

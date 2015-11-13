@@ -13,9 +13,9 @@ class ExceptionInfo
 {
 public:
   ExceptionInfo();
-  ::ExceptionInfo* handle();
+  ::ExceptionInfo* native();
 
-  std::string message() const;
+  std::string reason() const;
 
 private:
   ExceptionInfoHandle handle_;
