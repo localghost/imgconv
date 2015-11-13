@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Main.qml</file>
+        <file>MainForm.ui.qml</file>
+        <file>ResizeAction.qml</file>
+        <file>MessageBox.qml</file>
+        <file>PipelineEditor.qml</file>
+    </qresource>
+</RCC>
