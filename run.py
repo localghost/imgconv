@@ -3,6 +3,7 @@
 import os
 import sys
 import pwd
+import subprocess
 
 PROJECT_PATH = os.path.dirname(os.path.realpath(__file__))
 DOCKER_PATH = os.path.join(PROJECT_PATH, r'docker')
@@ -33,17 +34,20 @@ class DEV_ENV_CONFIG(object):
 class ImgconvError(RuntimeError):
     pass
 
-def run_cmd(cmd, cwd=None):
+def run_cmd_noexcept(cmd, cwd=None):
     _cmd = ''
     if cwd:
         _cmd = 'cd "%s" && ' % cwd
     _cmd += cmd
     print "Running:", _cmd
-    if os.system(_cmd) != 0:
-        raise ImgconvError("Command failed: " + _cmd)
+    return subprocess.call(_cmd, shell=True)
+
+def run_cmd(cmd, cwd=None):
+    if run_cmd_noexcept(cmd, cwd) != 0:
+        raise ImgconvError("Command failed [cwd=%s, cmd=%s]" % (cwd, cmd))
 
 def docker_run_cmd(image, cmd, shared_folders=None, run_as_root=False, with_x=False):
-    _cmd = 'docker run --rm'
+    _cmd = 'docker run --rm' # --privileged'
     
     if shared_folders:
         _cmd += ' ' + ' '.join(['-v ' + ':'.join(sf) for sf in shared_folders])
@@ -60,6 +64,12 @@ def docker_run_cmd(image, cmd, shared_folders=None, run_as_root=False, with_x=Fa
     _cmd += ' %s %s' % (image, cmd)
 
     run_cmd(_cmd, DEV_ENV_CONFIG.PATH)
+
+def is_docker_running():
+    return run_cmd_noexcept(r'service docker status') == 0
+
+def start_docker():
+    run_cmd(r'sudo service docker start')
 
 def user_exists(username):
     try:
@@ -84,6 +94,8 @@ def run_ide():
     docker_run_cmd(image, cmd, shared_folders, with_x=True)
 
 def main():
+    if not is_docker_running():
+        start_docker()
     return run_ide()
     
 if __name__ == '__main__':
