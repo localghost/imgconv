@@ -80,7 +80,7 @@ ApplicationWindow {
             {
                 pipelineEditorLoader.source = "PipelineEditor.qml"
             }
-            pipelineEditorLoader.item.open()
+            pipelineEditorLoader.item.show()
         }
         shortcut: "Ctrl+E"
     }
