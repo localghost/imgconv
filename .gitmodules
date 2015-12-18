@@ -1,0 +1,3 @@
+[submodule "src/base"]
+	path = src/base
+	url = git@github.com:localghost/base.git
