@@ -23,7 +23,7 @@ class COMMON_CONFIG(object):
 class DEV_ENV_CONFIG(object):
     PATH = os.path.join(DOCKER_PATH, r'devel')
     
-    IDE_LAUNCHER_PATH = r'/opt/qtcreator/bin/qtcreator'
+    IDE_LAUNCHER_PATH = r'qtcreator'
 
     SOURCES_PATH_HOST = PROJECT_PATH
     SOURCES_PATH_GUEST = r'/opt/sources/imgconv'
